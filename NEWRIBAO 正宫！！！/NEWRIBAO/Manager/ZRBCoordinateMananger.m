@@ -33,16 +33,30 @@ static ZRBCoordinateMananger * manager = nil;
 
 - (void)requestNewDateSucceed:(ZRBGetNewJSONModelHandle)succeedBlock error:(ErrorHandle)errorBlock
 {
-    //在这里 
+    //在这里 把这个学长提到的问题修改一下
+    
+    //然后运行测试  看 cell 那里怎么改！！！！
     
     
     
-    _testUrlStr = @"https://news-at.zhihu.com/api/4/news/latest";
-    _testUrlStr = [_testUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    _testUrl = [NSURL URLWithString:_testUrlStr];
-    _testRequest = [NSURLRequest requestWithURL:_testUrl];
-    _testSession = [NSURLSession sharedSession];
-    _testDataTask = [_testSession dataTaskWithRequest:_testRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    NSString * testUrlStr = [[NSString alloc] init];
+//    NSURL * testUrl = [
+    
+    NSString * testUrlStr = @"https://news-at.zhihu.com/api/4/news/latest";
+    testUrlStr = [testUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSURL * testUrl = [NSURL URLWithString:testUrlStr];
+    NSURLRequest * testRequest = [NSURLRequest requestWithURL:testUrl];
+    NSURLSession * testSession = [NSURLSession sharedSession];
+    NSURLSessionDataTask * testDataTask = [testSession dataTaskWithRequest:testRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if ( error == nil ){
             NSDictionary * dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             TotalJSONModel * model = [[TotalJSONModel alloc] initWithDictionary:dic error:nil];
@@ -53,22 +67,22 @@ static ZRBCoordinateMananger * manager = nil;
             }
         }
     }];
-    [_testDataTask resume];
+    [testDataTask resume];
 }
 
 - (void)requestDate:(NSString *)dateStr Succeed:(ZRBGetNewJSONModelHandle)succeedBlock ErrBlock:(ErrorHandle)errorBlock
 {
     
-        _testUrlStr = [NSString stringWithFormat:@"https://news-at.zhihu.com/api/4/news/before/%@",[NSString stringWithFormat:@"%@",dateStr]];
-        _testUrlStr = [_testUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        NSString * testUrlStr = [NSString stringWithFormat:@"https://news-at.zhihu.com/api/4/news/before/%@",[NSString stringWithFormat:@"%@",dateStr]];
+        testUrlStr = [testUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
                         
-        _testUrl = [NSURL URLWithString:_testUrlStr];
+        NSURL * testUrl = [NSURL URLWithString:testUrlStr];
                         
-        _testRequest = [NSURLRequest requestWithURL:_testUrl];
+        NSURLRequest * testRequest = [NSURLRequest requestWithURL:testUrl];
     
-        _testSession = [NSURLSession sharedSession];
+        NSURLSession * testSession = [NSURLSession sharedSession];
                         
-        _testDataTask = [_testSession dataTaskWithRequest:_testRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSURLSessionDataTask * testDataTask = [testSession dataTaskWithRequest:testRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             if ( error == nil ){
                 NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
                 TotalJSONModel * beforeOnecUponDataJSONModel = [[TotalJSONModel alloc] initWithDictionary:dict error:nil];
@@ -79,7 +93,7 @@ static ZRBCoordinateMananger * manager = nil;
                 }
             }
         }];
-        [_testDataTask resume];
+        [testDataTask resume];
     
         NSLog(@"一口气四个日期  _dateMutArra.count = %li",_dateMutArray.count);
         NSLog(@"一口气四个日期  _dateMutArray = %@",_dateMutArray);
@@ -102,7 +116,8 @@ static ZRBCoordinateMananger * manager = nil;
             [self.dataMutArray addObject:mainMessageJSONModel];
             i++;
             if ( i == 5 ){
-                [self dadadad:[succeedBlock copy]];
+                NSLog(@"_dataMutArray = %@",_dataMutArray);
+                [self dadadadSucceed:[succeedBlock copy]];
             }
             [self.lock unlock];
         } ErrBlock:[errorBlock copy]];
@@ -113,7 +128,8 @@ static ZRBCoordinateMananger * manager = nil;
                 [self.dataMutArray addObject:mainMessageJSONModel];
                 i++;
                 if ( i == 5 ){
-                    [self dadadad:[succeedBlock copy]];
+                    NSLog(@"_dataMutArray = %@",_dataMutArray);
+                    [self dadadadSucceed:[succeedBlock copy]];
                 }
                 [self.lock unlock];
             } ErrBlock:[errorBlock copy]];
@@ -121,10 +137,13 @@ static ZRBCoordinateMananger * manager = nil;
         
             [self requestDate:[NSString stringWithFormat:@"%ld",self.lateseDate.integerValue - 2] Succeed:^(TotalJSONModel *mainMessageJSONModel) {
                 [self.lock lock];
+//                if ( mainMessageJSONModel ){
                 [self.dataMutArray addObject:mainMessageJSONModel];
+//                }
                 i++;
                 if ( i == 5 ){
-                    [self dadadad:[succeedBlock copy]];
+                    NSLog(@"_dataMutArray = %@",_dataMutArray);
+                    [self dadadadSucceed:[succeedBlock copy]];
                 }
                 [self.lock unlock];
             } ErrBlock:[errorBlock copy]];
@@ -135,7 +154,8 @@ static ZRBCoordinateMananger * manager = nil;
                 [self.dataMutArray addObject:mainMessageJSONModel];
                 i++;
                 if ( i == 5 ){
-                    [self dadadad:[succeedBlock copy]];
+                    NSLog(@"_dataMutArray = %@",_dataMutArray);
+                    [self dadadadSucceed:[succeedBlock copy]];
                 }
                 [self.lock unlock];
             } ErrBlock:[errorBlock copy]];
@@ -145,7 +165,8 @@ static ZRBCoordinateMananger * manager = nil;
                 [self.dataMutArray addObject:mainMessageJSONModel];
                 i++;
                 if ( i == 5 ){
-                    [self dadadad:[succeedBlock copy]];
+                    NSLog(@"_dataMutArray = %@",_dataMutArray);
+                    [self dadadadSucceed:[succeedBlock copy]];
                 }
                 [self.lock unlock];
             } ErrBlock:[errorBlock copy]];
@@ -153,15 +174,37 @@ static ZRBCoordinateMananger * manager = nil;
     }
 }
 
-- (void)dadadad:(ZRBNSArrayBlock)block{
-    //在这里进行数据整理排序
-    
-    
-    
-    
-    
-    NSLog(@"_dataMutArray = %@",_dataMutArray);
+- (void)dadadadSucceed:(ZRBNSArrayBlock)succeedBlock{
+    NSMutableArray * dateMutAry = [[NSMutableArray alloc] init];
+    for (int i = 0; i < _dataMutArray.count; i++) {
+        TotalJSONModel * totalJSONModel = _dataMutArray[i];
+        [dateMutAry addObject:totalJSONModel.date];
+        NSLog(@"totalJSONModel.date = %@",totalJSONModel.date);
+    }
+    NSArray * sortArray = [dateMutAry sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        NSLog(@"obj1 = %@  obj2 = %@",obj1,obj2);
+        if ( [obj1 integerValue] < [obj2 integerValue] ){
+            return NSOrderedDescending;
+        }
+        else{
+            return NSOrderedAscending;
+        }
+    }];
+    NSMutableArray * returnArray = [[NSMutableArray alloc] init];
+        for (int j = 0; j < sortArray.count; j++) {
+            for (int i = 0; i < _dataMutArray.count; i++){
+                TotalJSONModel * totalJSONModel = _dataMutArray[i];
+                if ( [totalJSONModel.date isEqualToString:[NSString stringWithFormat:@"%@",sortArray[j]]] ){
+                    [returnArray addObject:totalJSONModel];
+                }
+            }
+        }
+    NSArray * realArray = [NSArray arrayWithArray:returnArray];
+    NSLog(@"returnArray = %@",returnArray);
+    succeedBlock(realArray);
     
 }
+
+
 
 @end

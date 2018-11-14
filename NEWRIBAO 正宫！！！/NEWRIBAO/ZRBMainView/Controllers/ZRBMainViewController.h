@@ -19,7 +19,7 @@
 #import "ZRBCoordinateMananger.h"
 
 @interface ZRBMainViewController : UIViewController
-<ZRBPushToWebViewDelegate,UITableViewDelegate,ZRBGiveCellJSONMOdelToMainViewDelegate>
+<ZRBPushToWebViewDelegate,UITableViewDelegate,ZRBGiveCellJSONMOdelToMainViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) ZRBMainVIew * MainView;
 

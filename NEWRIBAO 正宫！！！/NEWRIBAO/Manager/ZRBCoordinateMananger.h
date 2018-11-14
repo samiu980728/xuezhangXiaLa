@@ -16,7 +16,7 @@ typedef void(^ZRBGetJSONModelHandle)(ZRBOnceUponDataJSONModel * OnceUpOnJSONMode
 
 typedef void(^ZRBGetNewJSONModelHandle)(TotalJSONModel * mainMessageJSONModel);
 
-typedef void(^ZRBNSArrayBlock)(NSArray * array);
+typedef void(^ZRBNSArrayBlock)(NSArray * mutArray);
 
 //请求失败回调block
 typedef void(^ErrorHandle)(NSError *error);

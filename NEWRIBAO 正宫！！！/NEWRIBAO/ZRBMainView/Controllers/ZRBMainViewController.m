@@ -65,6 +65,7 @@
     _MainView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
 
     _MainView.mainMessageTableView.delegate = self;
+    _MainView.mainMessageTableView.dataSource = self;
     [self.view addSubview:_scrollView];
     
     [self fenethMessageFromManagerBlock:NO];
@@ -80,10 +81,8 @@
     _titleMutArray1 = [[NSMutableArray alloc] init];
     _imageMutArray1 = [[NSMutableArray alloc] init];
     
-    NSMutableArray * _titleMutArray = [[NSMutableArray alloc] init];
-    NSMutableArray * _imageMutArray = [[NSMutableArray alloc] init];
-    NSMutableArray * _mainImageMutArray = [[NSMutableArray alloc] init];
-    NSMutableArray * _mainTitleMutArray = [[NSMutableArray alloc] init];
+    NSMutableArray * mainImageMutArray = [[NSMutableArray alloc] init];
+    NSMutableArray * mainTitleMutArray = [[NSMutableArray alloc] init];
     //测试
     NSString * mainTestStr = [[NSString alloc] init];
     if ( isRefresh == NO ){
@@ -96,6 +95,58 @@
     }else{
         [[ZRBCoordinateMananger sharedManager] fetchDataFromNetisReferesh:YES Succeed:^(NSArray *array) {
             NSLog(@"多次之后的 array = %@",array);
+            //传cell的方法
+            // 把stories部分数据解析之后
+            //1.把文字和照片分别存入 二维数组中
+            
+            for (int i = 0; i < array.count; i++) {
+                TotalJSONModel * totalJSONModel = array[i];
+                //现在这里面有一天的数据
+                NSLog(@"totalJSONModel.stories = %@",totalJSONModel.stories);
+                //一天的数据
+                NSMutableArray * titleMutArray = [[NSMutableArray alloc] init];
+                NSMutableArray * imageMutArray = [[NSMutableArray alloc] init];
+                NSArray * data = totalJSONModel.stories;
+                NSLog(@"data.count = %li - -- - - - - - -- - - ",data.count);
+                    for (int i = 0; i < data.count; i++) {
+                        StoriesJSONModel * storJSONMOdel = data[i];
+                        [titleMutArray addObject:storJSONMOdel.title];
+                        NSURL * JSONUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@",storJSONMOdel.images[0]]];
+                        NSData * imageData = [NSData dataWithContentsOfURL:JSONUrl];
+                        UIImage * image = [UIImage imageWithData:imageData];
+                        if ( image ){
+                            [imageMutArray addObject:image];
+                        }
+                        
+                    }
+                [_titleMutArray1 addObject:titleMutArray];
+                [_imageMutArray1 addObject:imageMutArray];
+                //刚把数组成功变成二维数组 下面只需要按[indepath.section][indexPath.row]赋值即可
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+
+            }
+            
+            NSLog(@"_titleMutArray1 = %@",_titleMutArray1);
+            
+            NSNotification * reloadDateNotification = [NSNotification notificationWithName:@"reloadDataTongZhi" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotification:reloadDateNotification];
         } error:^(NSError *error) {
             NSLog(@"网络请求错误");
         }];
@@ -104,6 +155,18 @@
     
 
 }
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -143,6 +206,8 @@
     }
     
 }
+
+
 
 - (void)giveCellJSONModelToMainView:(NSMutableArray *)imaMutArray andTitle:(NSMutableArray *)titMutArray
 {
