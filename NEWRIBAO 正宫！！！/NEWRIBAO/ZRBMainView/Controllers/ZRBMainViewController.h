@@ -53,6 +53,6 @@
 
 @property (nonatomic, assign) NSInteger refreshNumInteger;
 
-
+@property (nonatomic, strong) NSMutableArray * allDateMutArray;
 
 @end

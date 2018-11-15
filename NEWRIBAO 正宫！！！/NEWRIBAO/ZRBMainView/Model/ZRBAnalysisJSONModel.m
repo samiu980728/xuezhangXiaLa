@@ -82,10 +82,10 @@
             //            NSNotificationCenter * center = [NSNotificationCenter defaultCenter];
             //            [center addObserver:self selector:@selector(changJSONModel:) name:@"notification" object:nil];
             
-            NSDictionary * dict = [[NSDictionary alloc] initWithObjectsAndKeys:_JSONModelMut,@"one", nil];
-            NSNotification * notification = [NSNotification notificationWithName:@"tongzhi" object:nil userInfo:dict];
-            
-            [[NSNotificationCenter defaultCenter] postNotification:notification];
+//            NSDictionary * dict = [[NSDictionary alloc] initWithObjectsAndKeys:_JSONModelMut,@"one", nil];
+//            NSNotification * notification = [NSNotification notificationWithName:@"tongzhi" object:nil userInfo:dict];
+//            
+//            [[NSNotificationCenter defaultCenter] postNotification:notification];
             
         }
         

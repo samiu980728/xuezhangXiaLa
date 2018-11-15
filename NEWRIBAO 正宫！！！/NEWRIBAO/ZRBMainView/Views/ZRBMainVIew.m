@@ -109,18 +109,18 @@
     //创建另一个更新视图的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(giveMessageFromViewController:) name:@"reloadDataTongZhi" object:nil];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
         _mainMessageTableView = [[UITableView alloc] init];
-        [_mainMessageTableView registerClass:[ZRBNewsTableViewCell class] forCellReuseIdentifier:@"messageCell"];
+        //[_mainMessageTableView registerClass:[ZRBNewsTableViewCell class] forCellReuseIdentifier:@"messageCell"];
         
         //注册头部视图
-        [_mainMessageTableView registerClass:[ZRBDetailsTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"detailHeaderView"];
-        _mainMessageTableView.delegate = self;
-        _mainMessageTableView.dataSource = self;
-        
+        //[_mainMessageTableView registerClass:[ZRBDetailsTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"detailHeaderView"];
+//        _mainMessageTableView.delegate = self;
+//        _mainMessageTableView.dataSource = self;
+    
         //_cellJSONModel.delegateCell = self;
         
-        [self setUpDownRefresh];
+        //[self setUpDownRefresh];
         
         [self addSubview:_mainMessageTableView];
         
@@ -134,60 +134,50 @@
             
             _cellTagInteger = 0;
         }];
-        [_mainMessageTableView reloadData];
+        //[_mainMessageTableView reloadData];
         
         
         
-    });
+//    });
     
 }
 
 //移除通知
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tongzhi" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reloadDataTongZhi" object:nil];
-}
+//- (void)dealloc
+//{
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tongzhi" object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reloadDataTongZhi" object:nil];
+//}
+//
+//- (void)tongzhi:(NSNotification *)noti
+//{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        //[_mainMessageTableView reloadData];
+//        //_mainMessageTableView.tableFooterView.hidden = YES;
+//    });
+//
+//}
 
-- (void)tongzhi:(NSNotification *)noti
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        //[_mainMessageTableView reloadData];
-        _mainMessageTableView.tableFooterView.hidden = YES;
-    });
-    
-}
 
-//集成上拉刷新的方法
-- (void)setUpDownRefresh
-{
-    ZRBLoadMoreView * loadMoreView = [[ZRBLoadMoreView alloc] init];
-    [loadMoreView footer];
-    loadMoreView.frame = CGRectMake(0, 0, 414, 44);
-    
-    loadMoreView.hidden = YES;
-    _mainMessageTableView.tableFooterView = loadMoreView;
-}
+////头视图相关
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    _headerFooterView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"detailHeaderView"];
+//    if ( _headerFooterView == nil ){
+//        _headerFooterView = [[ZRBDetailsTableViewHeaderFooterView alloc] initWithReuseIdentifier:@"detailHeaderView"];
+//
+//
+//    }
+//    _headerFooterView.dateLabel.text = @"每天都是星期七";
+//    NSLog(@"section == = == = = = %li",section);
+//    return _headerFooterView;
+//}
 
-//头视图相关
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    _headerFooterView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"detailHeaderView"];
-    if ( _headerFooterView == nil ){
-        _headerFooterView = [[ZRBDetailsTableViewHeaderFooterView alloc] initWithReuseIdentifier:@"detailHeaderView"];
-        
-        
-    }
-    _headerFooterView.dateLabel.text = @"每天都是星期七";
-    NSLog(@"section == = == = = = %li",section);
-    return _headerFooterView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    NSLog(@"_analyJSONMutArray.count == == = = =%li = = == ",_analyJSONMutArray.count);
-    return 100;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    NSLog(@"_analyJSONMutArray.count == == = = =%li = = == ",_analyJSONMutArray.count);
+//    return 100;
+//}
 
 //在ZRBMainVIewController里面进行通知传值
 - (void)giveMessageFromViewController:(NSNotification *)noti
@@ -254,24 +244,6 @@
     }
         return cell;
    
-}
-
-- (void)changeNum
-{
-    //大改：
-    //重新架构 把块的返回值修改了
-    //同时把VIewCOntroler层的代码进行了优化
-    //UIView层的section 与 indexPath.row 的返回值进行了重写
-    //明天测试
-    //满足😌！！！！
-    //加油🆙
-    
-    
-    
-    
-    
-    
-    
 }
 
 

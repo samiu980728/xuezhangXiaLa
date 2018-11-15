@@ -22,12 +22,16 @@
     
     _refreshNumInteger = 0;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDataTongZhiController:) name:@"reloadDataTongZhiController" object:nil];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.title = @"今日新闻";
     
     _refresh = YES;
     _mainAnalyisMutArray = [[NSMutableArray alloc] init];
+    
+    _allDateMutArray = [[NSMutableArray alloc] init];
     
     _mainCellJSONModel = [[ZRBCellModel alloc] init];
     [_mainCellJSONModel giveCellJSONModel];
@@ -106,6 +110,7 @@
                 //一天的数据
                 NSMutableArray * titleMutArray = [[NSMutableArray alloc] init];
                 NSMutableArray * imageMutArray = [[NSMutableArray alloc] init];
+                [_allDateMutArray addObject:totalJSONModel.date];
                 NSArray * data = totalJSONModel.stories;
                 NSLog(@"data.count = %li - -- - - - - - -- - - ",data.count);
                     for (int i = 0; i < data.count; i++) {
@@ -123,29 +128,15 @@
                 [_imageMutArray1 addObject:imageMutArray];
                 //刚把数组成功变成二维数组 下面只需要按[indepath.section][indexPath.row]赋值即可
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-
             }
             
             NSLog(@"_titleMutArray1 = %@",_titleMutArray1);
             
-            NSNotification * reloadDateNotification = [NSNotification notificationWithName:@"reloadDataTongZhi" object:nil];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [_MainView.mainMessageTableView reloadData];
+//            });
+            
+            NSNotification * reloadDateNotification = [NSNotification notificationWithName:@"reloadDataTongZhiController" object:nil];
             [[NSNotificationCenter defaultCenter] postNotification:reloadDateNotification];
         } error:^(NSError *error) {
             NSLog(@"网络请求错误");
@@ -156,16 +147,48 @@
 
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (void)reloadDataTongZhiController:(NSNotification *)noti
 {
-    return 1;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_MainView.mainMessageTableView reloadData];
+    });
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    NSLog(@"_allDateMutArray.count = %li",_allDateMutArray.count);
+    return _allDateMutArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell * cell = nil;
+    cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    if ( cell == nil ){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    }
+    return cell;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    NSLog(@"section = %li",section);
+    NSArray * array = [NSArray arrayWithObject:_imageMutArray1[section]];
+    NSInteger i = 0;
+    for (NSString * images in array[0]) {
+        i++;
+    }
+    return i;
 }
+
+// 行数 和 列数 全部设置完毕
+//下面开始显示数据
+//cellForRowAtIndexPath 方法！！！
+
+
+
+
+
 
 
 
@@ -207,7 +230,10 @@
     
 }
 
-
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reloadDataTongZhiController" object:nil];
+}
 
 - (void)giveCellJSONModelToMainView:(NSMutableArray *)imaMutArray andTitle:(NSMutableArray *)titMutArray
 {
