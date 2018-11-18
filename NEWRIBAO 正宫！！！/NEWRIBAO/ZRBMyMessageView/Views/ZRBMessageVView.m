@@ -64,35 +64,7 @@
 
 - (void)initMainTableView
 {
-    //    //在这里解析数据
-    //   // _mainMessageTableView = [[UITableView alloc] init];
-    //
-    //    NSNotification * notification = [NSNotification notificationWithName:@"notification" object:nil];
-    //    [[NSNotificationCenter defaultCenter] postNotification:notification];
-    //
-    //
-    //    _analyJSONMutArray = [[NSMutableArray alloc] init];
-    //
-    //    NSLog(@"----------------------");
-    //
-    //
-    //    _analyJSONModel = [[AnalysisJSONModel alloc] init];
-    //
-    //    [_analyJSONModel AnalysisJSON];
     
-    //不是应该在这里打印 NSLog(@"_JSONModelMut ====  ---- %@ ----",_JSONModelMut);吗？
-    
-    //[analyJSONModel AnalysisJSON];
-    
-    
-    //    NSLog(@"analyJSONModel.JSONModelMut = %@",_analyJSONModel.JSONModelMut);
-    //
-    //    if ( [_analyJSONModel.JSONModelMut isKindOfClass:[NSArray class]] && _analyJSONModel.JSONModelMut.count > 0 ){
-    //    _analyJSONMutArray = [NSMutableArray arrayWithArray:_analyJSONModel.JSONModelMut];
-    //    }
-    //    NSLog(@"_analyJSONMutArray = %@",_analyJSONMutArray);
-    
-    //[_mainMessageTableView registerClass:<#(nullable Class)#> forCellReuseIdentifier:<#(nonnull NSString *)#>]
 }
 
 //接收通知后调用的方法
@@ -156,28 +128,9 @@
     ZRBMessageTableViewCell * cell = nil;
     
     cell = [_messageTableView dequeueReusableCellWithIdentifier:@"messageCell" forIndexPath:indexPath];
-    
-    //if ( indexPath.row == 0 ){
-    
-    //可以加一个判断 如果
     cell.nameLabel.text = @"萨缪";
     cell.nameLabel.font = [UIFont systemFontOfSize:13];
-    
-    //        UIImage * img = [UIImage imageNamed:@"122.jpg"];
-    //        NSTextAttachment * textAttach = [[NSTextAttachment alloc] init];
-    //        textAttach.image = img;
-    //
-    //        NSAttributedString * strA = [NSAttributedString attributedStringWithAttachment:textAttach];
-    //        cell.imageLabel.attributedText = strA;
     cell.imageLabel.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"122.jpg"]];
-    // }
-    
-    
-    
-    
-    
-    
-    //还没有在  ViewController 中 调用呀
     return cell;
     
 }
@@ -190,11 +143,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     
-    //    if ( _mainMessageTableView ){
-    //        //一种
-    //    }else{
-    //        //另一种
-    //    }
     return 13;
 }
 

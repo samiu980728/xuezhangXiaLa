@@ -33,24 +33,6 @@ static ZRBCoordinateMananger * manager = nil;
 
 - (void)requestNewDateSucceed:(ZRBGetNewJSONModelHandle)succeedBlock error:(ErrorHandle)errorBlock
 {
-    //在这里 把这个学长提到的问题修改一下
-    
-    //然后运行测试  看 cell 那里怎么改！！！！
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    NSString * testUrlStr = [[NSString alloc] init];
-//    NSURL * testUrl = [
-    
     NSString * testUrlStr = @"https://news-at.zhihu.com/api/4/news/latest";
     testUrlStr = [testUrlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSURL * testUrl = [NSURL URLWithString:testUrlStr];
@@ -63,6 +45,7 @@ static ZRBCoordinateMananger * manager = nil;
             succeedBlock(model);
         }else{
             if ( error ){
+                NSLog(@"无法获取网路请求");
                 errorBlock(error);
             }
         }
@@ -103,9 +86,10 @@ static ZRBCoordinateMananger * manager = nil;
 - (void)fetchDataFromNetisReferesh:(BOOL)isRefresh Succeed:(ZRBNSArrayBlock)succeedBlock error:(ErrorHandle)errorBlock{
     if ( !isRefresh ){
         [self requestNewDateSucceed:^(TotalJSONModel *mainMessageJSONModel) {
+            NSArray * maindata = [NSArray arrayWithObject:mainMessageJSONModel];
             NSArray * data = mainMessageJSONModel.stories;
             self.lateseDate = mainMessageJSONModel.date;
-            succeedBlock(data);
+            succeedBlock(maindata);
         } error:[errorBlock copy]];
     }else{
        __block NSInteger i = 0;

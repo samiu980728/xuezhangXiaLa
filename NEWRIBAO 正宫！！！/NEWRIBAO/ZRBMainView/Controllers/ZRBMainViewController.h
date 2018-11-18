@@ -15,7 +15,7 @@
 #import "SecondaryMessageViewController.h"
 #import "ZRBCellModel.h"
 #import "ZRBMainJSONModel.h"
-
+#import "ZRBDetailsTableViewHeaderFooterView.h"
 #import "ZRBCoordinateMananger.h"
 
 @interface ZRBMainViewController : UIViewController
@@ -55,4 +55,5 @@
 
 @property (nonatomic, strong) NSMutableArray * allDateMutArray;
 
+@property (nonatomic, strong) ZRBDetailsTableViewHeaderFooterView * headerFooterView;
 @end

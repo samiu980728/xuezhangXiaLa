@@ -7,7 +7,8 @@
 //
 
 #import "ZRBMainViewController.h"
-
+#import "ZRBNewsTableViewCell.h"
+#import "ZRBContinerViewController.h"
 @interface ZRBMainViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView * scrollView;
@@ -30,9 +31,7 @@
     
     _refresh = YES;
     _mainAnalyisMutArray = [[NSMutableArray alloc] init];
-    
     _allDateMutArray = [[NSMutableArray alloc] init];
-    
     _mainCellJSONModel = [[ZRBCellModel alloc] init];
     [_mainCellJSONModel giveCellJSONModel];
     _mainCellJSONModel.delegateCell = self;
@@ -43,36 +42,45 @@
     }
 
     _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-    
     _scrollView.contentSize = CGSizeMake(0, 900);
-
     _scrollView.delegate = self;
-    
-    
     _messageView = [[ZRBMessageVView alloc] init];
-    
     [_messageView initTableView];
-    
-    [_scrollView addSubview:_messageView];
-    
     _MainView = [[ZRBMainVIew alloc] init];
-    
     [_MainView initMainTableView];
     
-    [_MainView.leftNavigationButton addTarget:self action:@selector(pressLeftBarButton:) forControlEvents:UIControlEventTouchUpInside];
+    self.title = @"今天新闻";
+    self.view.backgroundColor = [UIColor orangeColor];
+    self.navigationController.view.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.navigationController.view.layer.shadowOffset = CGSizeMake(-10, 0);
+    self.navigationController.view.layer.shadowOpacity = 0.15;
+    self.navigationController.view.layer.shadowRadius = 10;
     
+    UIBarButtonItem * menuItemm = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1.png"] style:UIBarButtonItemStylePlain target:self action:@selector(openCloseMenu:)];
+    self.navigationItem.leftBarButtonItem = menuItemm;
     
+    [_MainView.mainMessageTableView registerClass:[ZRBNewsTableViewCell class] forCellReuseIdentifier:@"messageCell"];
+    [_MainView.mainMessageTableView registerClass:[ZRBDetailsTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"detailHeaderView"];
     _MainView.delegate = self;
-    
     [_scrollView addSubview:_MainView];
-    
-    _MainView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-
+    //_MainView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     _MainView.mainMessageTableView.delegate = self;
     _MainView.mainMessageTableView.dataSource = self;
     [self.view addSubview:_scrollView];
-    
     [self fenethMessageFromManagerBlock:NO];
+    
+    [_scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+    [_MainView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+}
+
+//侧边框栏的展开和关闭
+- (void)openCloseMenu:(UIBarButtonItem *)sender
+{
+    [self.navigationController.parentViewController performSelector:@selector(openCloseMenu)];
 }
 
 //manager类网络请求
@@ -92,6 +100,28 @@
     if ( isRefresh == NO ){
         [[ZRBCoordinateMananger sharedManager] fetchDataFromNetisReferesh:NO Succeed:^(NSArray *array) {
             NSLog(@"array = %@",array);
+            
+            TotalJSONModel * totalJSONModel = array[0];
+            [_allDateMutArray addObject:totalJSONModel.date];
+            NSArray * data = totalJSONModel.stories;
+            for (int i = 0; i < data.count; i++) {
+                NSMutableArray * titleMutArray = [[NSMutableArray alloc] init];
+                NSMutableArray * imageMutArray = [[NSMutableArray alloc] init];
+                StoriesJSONModel * storJSONModel = data[i];
+                [titleMutArray addObject:storJSONModel.title];
+                NSURL * JSONUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@",storJSONModel.images[0]]];
+                NSData * imageData = [NSData dataWithContentsOfURL:JSONUrl];
+                UIImage * image = [UIImage imageWithData:imageData];
+                if ( image ){
+                    [imageMutArray addObject:image];
+                }
+                [_titleMutArray1 addObject:titleMutArray];
+                [_imageMutArray1 addObject:imageMutArray];
+            }
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [_MainView.mainMessageTableView reloadData];
+                        });
+            
         } error:^(NSError *error) {
             NSLog(@"网络请求错误");
         }];
@@ -102,6 +132,12 @@
             //传cell的方法
             // 把stories部分数据解析之后
             //1.把文字和照片分别存入 二维数组中
+            if ( _titleMutArray1.count > 0 ){
+                [_titleMutArray1 removeAllObjects];
+                [_imageMutArray1 removeAllObjects];
+                
+            }
+            [_allDateMutArray removeAllObjects];
             
             for (int i = 0; i < array.count; i++) {
                 TotalJSONModel * totalJSONModel = array[i];
@@ -110,7 +146,9 @@
                 //一天的数据
                 NSMutableArray * titleMutArray = [[NSMutableArray alloc] init];
                 NSMutableArray * imageMutArray = [[NSMutableArray alloc] init];
+             
                 [_allDateMutArray addObject:totalJSONModel.date];
+               
                 NSArray * data = totalJSONModel.stories;
                 NSLog(@"data.count = %li - -- - - - - - -- - - ",data.count);
                     for (int i = 0; i < data.count; i++) {
@@ -126,8 +164,6 @@
                     }
                 [_titleMutArray1 addObject:titleMutArray];
                 [_imageMutArray1 addObject:imageMutArray];
-                //刚把数组成功变成二维数组 下面只需要按[indepath.section][indexPath.row]赋值即可
-                
             }
             
             NSLog(@"_titleMutArray1 = %@",_titleMutArray1);
@@ -162,6 +198,22 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    ZRBNewsTableViewCell * cell1 = nil;
+    cell1 = [tableView dequeueReusableCellWithIdentifier:@"messageCell"];
+    if ( _allDateMutArray.count == 1 ){
+        if ( _titleMutArray1.count > 0 ){
+        cell1.newsLabel.text = _titleMutArray1[0][0];
+        [_titleMutArray1 removeObjectAtIndex:0];
+        cell1.newsImageView.image = _imageMutArray1[0][0];
+        [_imageMutArray1 removeObjectAtIndex:0];
+        }
+    }else{
+    cell1.newsLabel.text = _titleMutArray1[indexPath.section][indexPath.row];
+    cell1.newsImageView.image = _imageMutArray1[indexPath.section][indexPath.row];
+    }
+    return cell1;
+    
+    
     UITableViewCell * cell = nil;
     cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if ( cell == nil ){
@@ -170,8 +222,27 @@
     return cell;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    _headerFooterView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"detailHeaderView"];
+    if ( _headerFooterView == nil ){
+        _headerFooterView = [[ZRBDetailsTableViewHeaderFooterView alloc] initWithReuseIdentifier:@"detailHeaderView"];
+    }
+    
+    _headerFooterView.dateLabel.text = _allDateMutArray[section];
+    return _headerFooterView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 60;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if ( _allDateMutArray.count == 1 ){
+        return _imageMutArray1.count;
+    }
     NSLog(@"section = %li",section);
     NSArray * array = [NSArray arrayWithObject:_imageMutArray1[section]];
     NSInteger i = 0;
@@ -180,17 +251,6 @@
     }
     return i;
 }
-
-// 行数 和 列数 全部设置完毕
-//下面开始显示数据
-//cellForRowAtIndexPath 方法！！！
-
-
-
-
-
-
-
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -242,7 +302,10 @@
     NSLog(@"****************Controlller代理协议里的  _imageMutArray = == = = = = == = %@",_mainImageMutArray1);
 }
 
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+        [self pushToWKWebView];
+}
 
 - (void)pushToWKWebView
 {
@@ -253,15 +316,15 @@
     [self.navigationController pushViewController:secondMessageViewController animated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBar.translucent = NO;
-    self.navigationItem.title = @"每日新闻";
-
-    UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1.png"] style:UIBarButtonItemStyleDone target:self action:@selector(pressLeftBarButton:)];
-    self.navigationItem.leftBarButtonItem = leftBarButton;
-}
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    self.navigationController.navigationBar.translucent = NO;
+//    self.navigationItem.title = @"每日新闻";
+//
+//    UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1.png"] style:UIBarButtonItemStyleDone target:self action:@selector(pressLeftBarButton:)];
+//    self.navigationItem.leftBarButtonItem = leftBarButton;
+//}
 
 - (void)pressLeftBarButton:(UIBarButtonItem *)leftBtn
 {

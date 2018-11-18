@@ -10,8 +10,18 @@
 #import "ZRBMessageVView.h"
 #import "ZRBMainVIew.h"
 #import <Masonry.h>
+
+@class ZRBMyMessageViewController;
+
+@protocol MenuControllerDelegate <NSObject>
+
+- (void)menuContoller:(ZRBMyMessageViewController *)controller didSelectitemAtIndex:(NSUInteger)index;
+
+@end
+
 @interface ZRBMyMessageViewController : UIViewController
 
+@property (nonatomic, weak) id <MenuControllerDelegate> delegate;
 
 @property (nonatomic, strong) ZRBMessageVView * aView;
 
@@ -21,4 +31,6 @@
 
 @property (nonatomic, strong) ZRBMainVIew * MView;
 
+
+- (void) addMenuItems;
 @end

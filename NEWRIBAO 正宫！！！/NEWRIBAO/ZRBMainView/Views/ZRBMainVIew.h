@@ -26,7 +26,7 @@
 
 @interface ZRBMainVIew : UIView
 
-<UITableViewDelegate, UITableViewDataSource,ZRBGiveCellJSONMOdelToMainViewDelegate>
+<ZRBGiveCellJSONMOdelToMainViewDelegate>
 
 //测试 加载更多效果
 @property (nonatomic, copy) NSString * testStr;
@@ -87,7 +87,11 @@
 
 //异步请求数据的方法
 
+//侧边栏的展开和关闭
+//- (void)openCloseMenu:(UIBarButtonItem *)sender;
 
+
+//下面没用
 //集成上拉刷新的方法
 - (void)setUpDownRefresh;
 

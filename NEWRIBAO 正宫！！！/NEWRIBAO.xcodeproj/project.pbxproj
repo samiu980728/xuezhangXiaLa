@@ -32,6 +32,7 @@
 		673FBEF921860C0B000CA6BD /* ZRBMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 673FBEF821860C0B000CA6BD /* ZRBMainViewController.m */; };
 		674418172186B2B80075BCD3 /* 122.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 674418162186B2B80075BCD3 /* 122.jpg */; };
 		674418192186B2C60075BCD3 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 674418182186B2C60075BCD3 /* 1.png */; };
+		6755848E21A060CA00004DE3 /* ZRBContinerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6755848D21A060CA00004DE3 /* ZRBContinerViewController.m */; };
 		6755FE8A218D09FB0033411D /* ZRBCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6755FE89218D09FB0033411D /* ZRBCellModel.m */; };
 		67627A9521886073007886CD /* ZRBRequestJSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 67627A9421886073007886CD /* ZRBRequestJSONModel.m */; };
 		6777035721898EFD00C91537 /* ZRBDetailsTableViewHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6777035621898EFD00C91537 /* ZRBDetailsTableViewHeaderFooterView.m */; };
@@ -102,6 +103,8 @@
 		673FBEF821860C0B000CA6BD /* ZRBMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZRBMainViewController.m; sourceTree = "<group>"; };
 		674418162186B2B80075BCD3 /* 122.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 122.jpg; path = ../../../122.jpg; sourceTree = "<group>"; };
 		674418182186B2C60075BCD3 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1.png; path = "../../../日报图片/1.png"; sourceTree = "<group>"; };
+		6755848C21A060CA00004DE3 /* ZRBContinerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZRBContinerViewController.h; sourceTree = "<group>"; };
+		6755848D21A060CA00004DE3 /* ZRBContinerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZRBContinerViewController.m; sourceTree = "<group>"; };
 		6755FE88218D09FB0033411D /* ZRBCellModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZRBCellModel.h; sourceTree = "<group>"; };
 		6755FE89218D09FB0033411D /* ZRBCellModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZRBCellModel.m; sourceTree = "<group>"; };
 		67627A9321886073007886CD /* ZRBRequestJSONModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZRBRequestJSONModel.h; sourceTree = "<group>"; };
@@ -188,6 +191,7 @@
 				673FBE962185E529000CA6BD /* ZRBMainView */,
 				673FBE642185E387000CA6BD /* AppDelegate.h */,
 				673FBE652185E387000CA6BD /* AppDelegate.m */,
+				6755848B21A05D1000004DE3 /* ControllerContainsManager */,
 				673FBE672185E387000CA6BD /* ViewController.h */,
 				673FBE682185E387000CA6BD /* ViewController.m */,
 				673FBE6A2185E387000CA6BD /* Main.storyboard */,
@@ -378,6 +382,15 @@
 				674418162186B2B80075BCD3 /* 122.jpg */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		6755848B21A05D1000004DE3 /* ControllerContainsManager */ = {
+			isa = PBXGroup;
+			children = (
+				6755848C21A060CA00004DE3 /* ZRBContinerViewController.h */,
+				6755848D21A060CA00004DE3 /* ZRBContinerViewController.m */,
+			);
+			path = ControllerContainsManager;
 			sourceTree = "<group>";
 		};
 		6755FE87218D09360033411D /* UITableViewManage */ = {
@@ -607,6 +620,7 @@
 				673FBEDB2185F661000CA6BD /* ZRBAnalysisJSONModel.m in Sources */,
 				673FBEE92185F7C5000CA6BD /* ZRBMainVIew.m in Sources */,
 				67627A9521886073007886CD /* ZRBRequestJSONModel.m in Sources */,
+				6755848E21A060CA00004DE3 /* ZRBContinerViewController.m in Sources */,
 				6777035721898EFD00C91537 /* ZRBDetailsTableViewHeaderFooterView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

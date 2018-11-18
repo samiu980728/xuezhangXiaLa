@@ -84,44 +84,18 @@
     
     [_leftNavigationButton setBackgroundImage:[UIImage imageNamed:@"1.png"] forState:UIControlStateNormal];
     
-    [self addSubview:_navigationTextLabel];
-    [self addSubview:_leftNavigationButton];
+    //[self addSubview:_navigationTextLabel];
+    //[self addSubview:_leftNavigationButton];
     
-    [_navigationTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(150);
-        make.top.equalTo(self).offset(20);
-        make.width.equalTo(@200);
-        make.height.equalTo(@20);
-    }];
-    
-    [_leftNavigationButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(10);
-        make.top.equalTo(self).offset(10);
-        make.width.equalTo(@50);
-        make.height.equalTo(@35);
-    }];
     //ZRBCellModel 方法的调用
     [_cellJSONModel giveCellJSONModel];
     
     //在发送通知后
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tongzhi:) name:@"tongzhi" object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tongzhi:) name:@"tongzhi" object:nil];
     
     //创建另一个更新视图的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(giveMessageFromViewController:) name:@"reloadDataTongZhi" object:nil];
-    
-//    dispatch_async(dispatch_get_main_queue(), ^{
         _mainMessageTableView = [[UITableView alloc] init];
-        //[_mainMessageTableView registerClass:[ZRBNewsTableViewCell class] forCellReuseIdentifier:@"messageCell"];
-        
-        //注册头部视图
-        //[_mainMessageTableView registerClass:[ZRBDetailsTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"detailHeaderView"];
-//        _mainMessageTableView.delegate = self;
-//        _mainMessageTableView.dataSource = self;
-    
-        //_cellJSONModel.delegateCell = self;
-        
-        //[self setUpDownRefresh];
-        
         [self addSubview:_mainMessageTableView];
         
         [_mainMessageTableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -134,70 +108,13 @@
             
             _cellTagInteger = 0;
         }];
-        //[_mainMessageTableView reloadData];
-        
-        
-        
-//    });
-    
 }
 
-//移除通知
-//- (void)dealloc
-//{
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tongzhi" object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reloadDataTongZhi" object:nil];
-//}
-//
-//- (void)tongzhi:(NSNotification *)noti
-//{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        //[_mainMessageTableView reloadData];
-//        //_mainMessageTableView.tableFooterView.hidden = YES;
-//    });
-//
-//}
+//侧拉栏的展开和关闭
 
 
-////头视图相关
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    _headerFooterView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"detailHeaderView"];
-//    if ( _headerFooterView == nil ){
-//        _headerFooterView = [[ZRBDetailsTableViewHeaderFooterView alloc] initWithReuseIdentifier:@"detailHeaderView"];
-//
-//
-//    }
-//    _headerFooterView.dateLabel.text = @"每天都是星期七";
-//    NSLog(@"section == = == = = = %li",section);
-//    return _headerFooterView;
-//}
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    NSLog(@"_analyJSONMutArray.count == == = = =%li = = == ",_analyJSONMutArray.count);
-//    return 100;
-//}
-
-//在ZRBMainVIewController里面进行通知传值
 - (void)giveMessageFromViewController:(NSNotification *)noti
 {
-    NSLog(@"12321312312312312312312312312312312312312312");
-    
-    NSLog(@"mainVIew _imageMutArray = %@",_imageMutArray);
-    NSLog(@"mainVIew _titleMutArray = %@",_titleMutArray);
-
-    
-    static dispatch_once_t onceToken2;
-    if ( _zeroSectionInteger == 1 ){
-        dispatch_once(&onceToken2, ^{
-            _countRowInteger = 0;
-            _nowIndexPathRowInteger = 0;
-            _imageCountInteger = 0;
-        });
-    }
-    NSLog(@"_zeroSectionInteger = %li",_zeroSectionInteger);
-    
     dispatch_async(dispatch_get_main_queue(), ^{
     [_mainMessageTableView reloadData];
         
@@ -264,77 +181,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger numRow = 0;
-    NSInteger numSection = 0;
-    NSLog(@"_analyJSONMutArray = %@",_analyJSONMutArray);
-    NSLog(@"numSection = %li",numSection);
-    NSLog(@"numRow = %li",numRow);
-    
-    NSLog(@"222_imageMutArray[section] = = %li",sizeof(_imageMutArray[section]));
-    NSLog(@"2221sizeof(_titleMutArray[section] = %li",sizeof(_titleMutArray[section]));
-    NSLog(@"111_titleMutArray.count = %li",_titleMutArray.count);
-    
-    NSLog(@"123321_imageMutArray = %@",_titleMutArray);
-    NSLog(@"_countRowInteger = %li",_countRowInteger);
-    
-    NSLog(@"_imageCountInteger = %li",_imageCountInteger);
-    
-    if ( _countRowInteger == 0 && _imageMutArray.count > _imageCountInteger ){
-        
-        _nowIndexPathRowInteger = _imageMutArray.count;
-        NSLog(@"image count = %li, section = %li",_imageMutArray.count,section);
-        _imageCountInteger = _imageMutArray.count;
-        
-        _countRowInteger++;
-        
-        //在这里return
-        NSArray * returnArray = [NSArray arrayWithArray:_imageMutArray[0]];
-        return returnArray.count;
-        
-    }
-    if ( _countRowInteger == 1 && _imageMutArray.count > _imageCountInteger ){
-        _nowIndexPathRowInteger = _imageMutArray.count - _nowIndexPathRowInteger;
-        NSLog(@"image count = %li, section = %li",_imageMutArray.count,section);
-        _imageCountInteger = _imageMutArray.count;
-        _countRowInteger++;
-        NSArray * returnArray = [NSArray arrayWithArray:_imageMutArray[1]];
-        return returnArray.count;
-    }
-    if ( _countRowInteger == 2 && _imageMutArray.count > _imageCountInteger ){
-        _nowIndexPathRowInteger = _imageMutArray.count - _nowIndexPathRowInteger;
-        NSLog(@"image count = %li, section = %li",_imageMutArray.count,section);
-        _imageCountInteger = _imageMutArray.count;
-        _countRowInteger++;
-        NSArray * returnArray = [NSArray arrayWithArray:_imageMutArray[2]];
-        return returnArray.count;
-    }
-    if ( _countRowInteger == 3 && _imageMutArray.count > _imageCountInteger ){
-        _nowIndexPathRowInteger = _imageMutArray.count - _nowIndexPathRowInteger;
-        NSLog(@"image count = %li, section = %li",_imageMutArray.count,section);
-        _imageCountInteger = _imageMutArray.count;
-        _countRowInteger++;
-        NSArray * returnArray = [NSArray arrayWithArray:_imageMutArray[2]];
-        return returnArray.count;
-    }
-    if ( _countRowInteger == 4 && _imageMutArray.count > _imageCountInteger ){
-        _nowIndexPathRowInteger = _imageMutArray.count - _nowIndexPathRowInteger;
-        NSLog(@"image count = %li, section = %li",_imageMutArray.count,section);
-        _imageCountInteger = _imageMutArray.count;
-        _countRowInteger++;
-        NSArray * returnArray = [NSArray arrayWithArray:_imageMutArray[3]];
-        return returnArray.count;
-    }
-    if ( _countRowInteger == 5 && _imageMutArray.count > _imageCountInteger ){
-        _nowIndexPathRowInteger = _imageMutArray.count - _nowIndexPathRowInteger;
-        NSLog(@"image count = %li, section = %li",_imageMutArray.count,section);
-        _imageCountInteger = _imageMutArray.count;
-        _countRowInteger++;
-        NSArray * returnArray = [NSArray arrayWithArray:_imageMutArray[4]];
-        return returnArray.count;
-    }
-    
-    NSLog(@"_nowIndexPathRowInteger = %li",_nowIndexPathRowInteger);
-    //return _nowIndexPathRowInteger;
     return _imageMutArray.count;
     return sizeof(_imageMutArray[section]);
     return sizeof(_imageMutArray[section]) / sizeof(_imageMutArray[section][0]);
@@ -342,13 +188,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
     return _dateNowMutArray.count;
-    //ZRBCoordinateMananger * manager = [ZRBCoordinateMananger sharedManager];
-    
-//    NSLog(@"manager.dateMutArray.count = %li",manager.dateMutArray.count);
-//    return manager.dateMutArray.count + 0;
-    return 4;
 }
 
 - (UIViewController *)getCurrentVC

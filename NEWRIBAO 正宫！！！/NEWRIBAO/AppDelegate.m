@@ -10,7 +10,7 @@
 #import "ZRBMainViewController.h"
 #import "ZRBMyMessageViewController.h"
 #import "ZRBPushMainNavigationViewController.h"
-
+#import "ZRBContinerViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -22,11 +22,16 @@
     // Override point for customization after application launch.
     
     
-    ZRBMainViewController * mainViewController = [[ZRBMainViewController alloc] init];
+//    ZRBMainViewController * mainViewController = [[ZRBMainViewController alloc] init];
+//
+//    ZRBPushMainNavigationViewController * fullScreenNavigationViewCOntroller = [[ZRBPushMainNavigationViewController alloc] initWithRootViewController:mainViewController];
     
-    ZRBPushMainNavigationViewController * fullScreenNavigationViewCOntroller = [[ZRBPushMainNavigationViewController alloc] initWithRootViewController:mainViewController];
+    ZRBContinerViewController * continerController = [[ZRBContinerViewController alloc] init];
+    self.window.rootViewController = continerController;
     
-    self.window.rootViewController = fullScreenNavigationViewCOntroller;
+    //self.window.rootViewController = fullScreenNavigationViewCOntroller;
+    
+    
     
     [self.window makeKeyAndVisible];
     
