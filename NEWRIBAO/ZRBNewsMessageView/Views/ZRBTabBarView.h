@@ -20,6 +20,9 @@
 
 @property (nonatomic, strong) UIButton * commentNewsButton;
 
-- (void)initCommentView;
+@property (nonatomic, strong) UILabel * allCommentsLabel;
+
+@property (nonatomic, strong) UILabel * commentsNumLabel;
+- (instancetype)initWithFrame:(CGRect)frame andAllapproval:(NSInteger)allApprovalNum andComments:(NSInteger)commentsNum;
 
 @end

@@ -10,4 +10,6 @@
 
 @interface ZRBCommentView : UIView
 
+@property (nonatomic, strong) UITableView *tableView;
+
 @end

@@ -21,17 +21,16 @@
     
     NSLog(@"_resaveIdString = %@",_resaveIdString);
     
+    [self fenethCommentsNumFromCommentManagerBlock];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(Dicttongzhi1:) name:@"Dicttongzhi1" object:nil];
     _mainWebView = [[ZRBMainWKWebView alloc] init];
     
     _requestModel = [[ZRBRequestJSONModel alloc] init];
     NSInteger intEger = [_resaveIdString integerValue];
     _requestModel.idRequestStr = [NSString stringWithFormat:@"%@",[NSNumber numberWithInteger:intEger]];
-    //[_requestModel setStr];
     [_requestModel requestJSONModel];
     
-    //现在连idRequestStr 都请求不来 更别说 通过idRequestStr 才能请求到 的 modelStr了
-    //_mainWebView.modelStr = [NSString stringWithFormat:@"%@",_requestModel.idRequestStr];
     _mainWebView.modelStr = [NSString stringWithFormat:@"%@",_requestModel.modelStr];
     [_mainWebView createAndGetJSONModelWKWebView];
     
@@ -41,18 +40,46 @@
     [_mainWebView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    
-    //加载tabBarView
-    _tabBarView = [[ZRBTabBarView alloc] init];
-    [self.view addSubview:_tabBarView];
-    [_tabBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(674);
-        make.left.mas_equalTo(self.view);
-        make.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(40);
-        make.width.mas_equalTo(self.view.bounds.size.width);
-        make.bottom.equalTo(self.view);
+}
+
+- (void)fenethCommentsNumFromCommentManagerBlock
+{
+    [[ZRBCommentManager sharedManager] fetchCommentsNumDataFormNewsViewWithIdString:_resaveIdString Succeed:^(ZRBNewsAdditionalJSONModel *additionalJSONModel) {
+        _allsApprovalInteger = additionalJSONModel.popularity;
+        _allsCommentsInteger = additionalJSONModel.comments;
+        
+        //在上面创建ViewController 
+        //如果长评论总数不为0 那么执行新闻对应长评论查看的网络请求
+        if ( additionalJSONModel.long_comments != 0 ){
+            //块请求后返回JOSNModel 然后
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _tabBarView = [[ZRBTabBarView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) andAllapproval:_allsApprovalInteger andComments:_allsCommentsInteger];
+            [_tabBarView.commentNewsButton addTarget:self action:@selector(pressCommentViewButton:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [self.view addSubview:_tabBarView];
+            [_tabBarView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.view).offset(674);
+                make.left.mas_equalTo(self.view);
+                make.right.mas_equalTo(self.view);
+                make.height.mas_equalTo(40);
+                make.width.mas_equalTo(self.view.bounds.size.width);
+                make.bottom.equalTo(self.view);
+            }];
+        });
+        
+    } error:^(NSError *error) {
+        NSLog(@"网络请求错误");
     }];
+}
+
+- (void)pressCommentViewButton:(UIButton *)sender
+{
+    ZRBCommentViewController * commentViewController = [[ZRBCommentViewController alloc] init];
+    commentViewController.secondResaveIdString = [NSString stringWithFormat:@"%@",_resaveIdString];
+    commentViewController.allCommentsNumInteger = _allsCommentsInteger;
+    [self.navigationController pushViewController:commentViewController animated:YES];
 }
 
 - (void)Dicttongzhi1:(NSNotification *)noti

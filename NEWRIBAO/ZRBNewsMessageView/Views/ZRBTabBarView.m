@@ -10,7 +10,7 @@
 #import <Masonry.h>
 @implementation ZRBTabBarView
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame andAllapproval:(NSInteger)allApprovalNum andComments:(NSInteger)commentsNum
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -19,7 +19,13 @@
         self.giveApproveButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.goNextNewsViewButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.returnMainViewButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.allCommentsLabel = [[UILabel alloc] init];
+        self.commentsNumLabel = [[UILabel alloc] init];
+        _allCommentsLabel.text = [NSString stringWithFormat:@"%@",[NSNumber numberWithInteger:allApprovalNum]];
+        _commentsNumLabel.text = [NSString stringWithFormat:@"%@",[NSNumber numberWithInteger:commentsNum]];
         
+        [self addSubview:_commentsNumLabel];
+        [self addSubview:_allCommentsLabel];
         [self addSubview:_shareNewsButton];
         [self addSubview:_commentNewsButton];
         [self addSubview:_giveApproveButton];
@@ -29,9 +35,18 @@
     return self;
 }
 
+//开 点赞 数字的位置！！！
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
     NSInteger padding = 40;
+    
+    //_allCommentsLabel.text = @"40";
+    _allCommentsLabel.backgroundColor = [UIColor orangeColor];
+    _allCommentsLabel.font = [UIFont systemFontOfSize:10];
+    
+    _commentsNumLabel.backgroundColor = [UIColor orangeColor];
+    _commentsNumLabel.font = [UIFont systemFontOfSize:10];
     self.backgroundColor = [UIColor whiteColor];
     [_returnMainViewButton setImage:[UIImage imageNamed:@"3.png"] forState:UIControlStateNormal];
     [_goNextNewsViewButton setImage:[UIImage imageNamed:@"4.png"] forState:UIControlStateNormal];
@@ -45,6 +60,21 @@
         make.bottom.equalTo(self).offset(-10);
         make.height.mas_equalTo(20);
         make.width.mas_equalTo(20);
+    }];
+    
+    [_allCommentsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self);
+        make.left.equalTo(_giveApproveButton.mas_right).offset(-10);
+        make.width.equalTo(@30);
+        make.height.equalTo(@20);
+    }];
+    
+    [_commentsNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self);
+        make.left.equalTo(_commentNewsButton.mas_right).offset(-10);
+        //make.right.equalTo(self);
+        make.width.equalTo(@30);
+        make.height.equalTo(@20);
     }];
 }
 
