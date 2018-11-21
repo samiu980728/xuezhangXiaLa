@@ -31,6 +31,7 @@
             _obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
         }
         _modelStr = [NSString stringWithFormat:@"%@",[_obj objectForKey:@"body"]];
+        _shareUrlString = [NSString stringWithFormat:@"%@",[_obj objectForKey:@"share_url"]];
         
         NSLog(@"_modelStr === ==== %@",_modelStr);
         

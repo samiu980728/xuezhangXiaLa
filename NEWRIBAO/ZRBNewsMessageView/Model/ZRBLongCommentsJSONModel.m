@@ -11,3 +11,11 @@
 @implementation ZRBLongCommentsJSONModel
 
 @end
+
+@implementation ZRBCommentsJSONModel
+
+@end
+
+@implementation ZRBReplyToJSONModel
+
+@end

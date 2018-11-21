@@ -37,6 +37,7 @@
 
 @property (nonatomic, strong) UIPanGestureRecognizer * panGestureRecognizer;
 
+@property (nonatomic, copy) NSString * shareUrlString;
 - (void)createAndGetJSONModelWKWebView;
 
 - (void)recieveNotification;

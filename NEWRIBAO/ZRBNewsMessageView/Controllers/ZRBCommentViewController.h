@@ -16,6 +16,24 @@
 @property (nonatomic, strong) NSString * secondResaveIdString;
 
 @property (nonatomic, assign) NSInteger allCommentsNumInteger;
+
+//接收作者
+@property (nonatomic, strong) NSMutableArray * authorMutArray;
+//接收评论内容
+@property (nonatomic, strong) NSMutableArray * contentMMutArray;
+//接收用户头像
+@property (nonatomic, strong) NSMutableArray * avatorMutArray;
+//接收时间
+@property (nonatomic, strong) NSMutableArray * timeMutArray;
+//接收所回复的消息
+@property (nonatomic, strong) NSMutableArray * reply_toMutArray;
+//接收作者唯一id
+@property (nonatomic, strong) NSMutableArray * onlyIdMutArray;
+//接收其他用户给作者的赞数
+@property (nonatomic, strong) NSMutableArray * likesMutArray;
+
+@property (nonatomic, assign) NSInteger longCommentsNumInteger;
+
 - (void)fenethLongCommentsFromJSONModel;
 
 @end

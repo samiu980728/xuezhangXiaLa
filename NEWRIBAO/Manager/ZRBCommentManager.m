@@ -47,6 +47,15 @@ static ZRBCommentManager * manager = nil;
         if ( error == nil ){
             NSDictionary * dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             ZRBLongCommentsJSONModel * longCommentsJSONModel = [[ZRBLongCommentsJSONModel alloc] initWithDictionary:dict error:nil];
+            NSString * str = [NSString stringWithFormat:@"%@",longCommentsJSONModel.comments];
+            NSLog(@"longCommentsJSONModel.comments = %@",longCommentsJSONModel.comments);
+            NSLog(@"longCommentsJSONModel.comments = %@",longCommentsJSONModel.comments[0]);
+            NSLog(@"keyyyy = %@",[longCommentsJSONModel.comments valueForKey:@"author"]);
+
+            if ( [longCommentsJSONModel.comments valueForKey:@"reply_to"] ){
+                NSLog(@"replyyyy = %@",[longCommentsJSONModel.comments valueForKey:@"reply_to"]);
+            }
+            
             succeedBlock(longCommentsJSONModel);
         }else{
             errorBlock(error);

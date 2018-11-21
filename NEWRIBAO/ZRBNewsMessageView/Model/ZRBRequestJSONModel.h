@@ -21,6 +21,7 @@
 
 @property (nonatomic, strong) NSMutableArray * idMutArray;
 
+@property (nonatomic, copy) NSString * shareUrlString;
 - (void)requestJSONModel;
 
 - (void)setStr;

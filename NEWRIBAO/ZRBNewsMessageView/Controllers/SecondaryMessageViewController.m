@@ -32,6 +32,7 @@
     [_requestModel requestJSONModel];
     
     _mainWebView.modelStr = [NSString stringWithFormat:@"%@",_requestModel.modelStr];
+    _mainWebView.shareUrlString = [NSString stringWithFormat:@"%@",_requestModel.shareUrlString];
     [_mainWebView createAndGetJSONModelWKWebView];
     
     [_mainWebView recieveNotification];
@@ -85,6 +86,7 @@
 - (void)Dicttongzhi1:(NSNotification *)noti
 {
     _mainWebView.modelStr = _requestModel.modelStr;
+    _mainWebView.shareUrlString = [NSString stringWithFormat:@"%@",_requestModel.shareUrlString];
     NSLog(@"_mainWebView.modelStr === ----- -- -- - -- - - - - - -- - -- --- -- %@",_mainWebView.modelStr);
 }
 

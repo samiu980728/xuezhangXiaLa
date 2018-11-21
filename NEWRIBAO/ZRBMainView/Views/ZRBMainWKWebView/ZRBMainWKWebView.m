@@ -31,9 +31,10 @@
         _webView.UIDelegate = self;
         _webView.navigationDelegate = self;
         NSLog(@"ZRBMainWKWebView 中的 modelStr ======= %@===== ",_modelStr);
-        
+        NSLog(@"_shareUrlString = %@",_shareUrlString);
         WKWebView * wkWebView = [[WKWebView alloc] init];
-        [wkWebView loadHTMLString:_modelStr baseURL:nil];
+        [wkWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_shareUrlString]]];
+        //[wkWebView loadHTMLString:_modelStr baseURL:nil];
         wkWebView.autoresizingMask = YES;
         [self addSubview:wkWebView];
         [wkWebView mas_makeConstraints:^(MASConstraintMaker *make) {
