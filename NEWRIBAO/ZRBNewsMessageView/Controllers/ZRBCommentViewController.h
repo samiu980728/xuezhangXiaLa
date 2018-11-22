@@ -34,6 +34,8 @@
 
 @property (nonatomic, assign) NSInteger longCommentsNumInteger;
 
+@property (nonatomic, strong) NSMutableArray * allDataMutArray;
+
 - (void)fenethLongCommentsFromJSONModel;
 
 @end

@@ -20,28 +20,6 @@
 
 @end
 
-
-//还未测试此JSONMOdel 能否使用
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//估计可以使用
-
-
-
 @interface ZRBCommentsJSONModel : JSONModel
 
 @property (nonatomic, copy) NSString * author;

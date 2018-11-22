@@ -8,7 +8,12 @@
 
 #import "ZRBCommentViewController.h"
 #import <Masonry.h>
+#import "ZRBCommentsTableViewCell.h"
 @interface ZRBCommentViewController ()
+
+@property (nonatomic, strong) ZRBCommentsTableViewCell * tempCell;
+
+@property (nonatomic, strong) ZRBLongCommentsJSONModel * allcommentsJSONModel;
 
 @end
 
@@ -25,11 +30,14 @@
     _reply_toMutArray = [[NSMutableArray alloc] init];
     _onlyIdMutArray = [[NSMutableArray alloc] init];
     _likesMutArray = [[NSMutableArray alloc] init];
+    _allDataMutArray = [[NSMutableArray alloc] init];
+    self.allcommentsJSONModel = [[ZRBLongCommentsJSONModel alloc] init];
     _longCommentsNumInteger = 0;
     
     self.title = [NSString stringWithFormat:@"%@ comments",[NSNumber numberWithInteger:_allCommentsNumInteger]];
     [self fenethLongCommentsFromJSONModel];
     self.commentView = [[ZRBCommentView alloc] init];
+    [self.commentView.tableView registerClass:[ZRBCommentsTableViewCell class] forCellReuseIdentifier:@"commentCell"];
     _commentView.tableView.delegate = self;
     _commentView.tableView.dataSource = self;
     _commentView.tableView.estimatedRowHeight = 100;
@@ -38,6 +46,7 @@
     [self.commentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
+    self.tempCell = [[ZRBCommentsTableViewCell alloc] initWithStyle:0 reuseIdentifier:@"commentCell"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -52,29 +61,30 @@
         return 1;
 }
 
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    //分这么几种可能 1.如果没有长评论
-//    UITableViewCell * cell = nil;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ( indexPath.section == 0 && _longCommentsNumInteger != 0 ){
+        if ( [self.allDataMutArray isKindOfClass:[NSArray class]] && self.allDataMutArray.count > 0 ){
+    CGFloat cellHeight = [self.tempCell heightForModel:_allDataMutArray[0][indexPath.row]];
+    return cellHeight;
+        }else{
+            return 100;
+        }
+    }else{
+        return 100;
+    }
+}
 
-//CELL自适应高度
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    ZRBCommentsTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
+    if ( indexPath.section == 0 ){
+        if ( [self.allDataMutArray isKindOfClass:[NSArray class]] && self.allDataMutArray.count > 0 ){
+    [cell setMessage:self.allDataMutArray[0][indexPath.row]];
+        }
+    }
+    return cell;
+}
 
 
 
@@ -85,6 +95,12 @@
         if ( additionalJSONModel.long_comments != 0 ){
             //执行长评论网络请求
             [[ZRBCommentManager sharedManager] fetchLongLongCommentsDataFromNewsViewWith:_secondResaveIdString Succeed:^(ZRBLongCommentsJSONModel *longCommentsJSONModel) {
+                self.allcommentsJSONModel = longCommentsJSONModel;
+                NSMutableArray * dataArray = [[NSMutableArray alloc] init];
+                [dataArray addObject:longCommentsJSONModel.comments];
+                [_allDataMutArray addObject:longCommentsJSONModel.comments];
+                NSLog(@"dataArray[0][0] = %@",dataArray[0][0]);
+                //接收所有数据
                 _longCommentsNumInteger = additionalJSONModel.long_comments;
                 //1.创建一个数组接收 author
                 [_authorMutArray addObject:[longCommentsJSONModel.comments valueForKey:@"author"]];
@@ -100,12 +116,22 @@
                 if ( ![replyStr isEqualToString:@"(\n    \"<null>\",\n    \"<null>\",\n    \"<null>\"\n)"]){
                 [_reply_toMutArray addObject:[longCommentsJSONModel.comments valueForKey:@"reply_to"]];
                 }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.commentView.tableView reloadData];
+                });
             } error:^(NSError *error) {
                 NSLog(@"网络请求出错： %@",error);
             }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.commentView.tableView reloadData];
+            });
+            
         }else{
             _longCommentsNumInteger = 0;
         }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.commentView.tableView reloadData];
+//        });
     } error:^(NSError *error) {
         NSLog(@"网络请求失败：原因  %@",error);
     }];
