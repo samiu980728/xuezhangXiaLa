@@ -47,7 +47,11 @@
     self.approvalButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.avatarImage = [[UIImageView alloc] init];
     
-    [self.approvalButton setImage:[UIImage imageNamed:@"5.png"] forState:UIControlStateNormal];
+    self.avatarImage.layer.cornerRadius = 25;
+    self.avatarImage.layer.masksToBounds = YES;
+//    setenv(, <#const char *__value#>, <#int __overwrite#>)
+    
+    [self.approvalButton setImage:[UIImage imageNamed:@"8.png"] forState:UIControlStateNormal];
     
     self.timeLabel.numberOfLines = 0;
     self.contentLabel.numberOfLines = 0;
@@ -68,9 +72,9 @@
     [self.contentView addSubview:self.avatarImage];
     
     [self.avatarImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView.mas_left);
-        make.right.mas_equalTo(self.contentView.mas_left).offset(30);
-        make.bottom.mas_equalTo(self.contentLabel.mas_top);
+        make.left.mas_equalTo(self.contentView.mas_left).offset(5);
+        make.right.mas_equalTo(self.contentView.mas_left).offset(58);
+        make.bottom.mas_equalTo(self.contentView.mas_top).offset(65);
         make.top.mas_equalTo(self.contentView.mas_top).offset(10);
     }];
     
@@ -78,19 +82,19 @@
         make.left.mas_equalTo(self.avatarImage.mas_right).offset(10);
         make.top.mas_equalTo(self.contentView.mas_top).offset(10);
         make.right.mas_equalTo(self.contentView.mas_right).offset(-150);
-        make.bottom.mas_equalTo(self.contentLabel.mas_top);
+        make.bottom.mas_equalTo(self.contentView.mas_top).offset(30);
     }];
     
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(10);
-        make.left.mas_equalTo(50);
+        make.left.mas_equalTo(self.nameLabel.mas_left);
         make.right.mas_equalTo(-20);
         make.bottom.mas_equalTo(self.timeLabel.mas_top).offset(-20);
     }];
     
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(20);
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(self.contentLabel.mas_left);
         make.right.mas_equalTo(-10);
         make.bottom.mas_equalTo(-10).offset(-20);
     }];
@@ -98,34 +102,15 @@
     [self.approvalButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentLabel.mas_right).offset(-40);
         make.right.mas_equalTo(self.contentView.mas_right).offset(-10);
-        make.top.mas_equalTo(self.nameLabel);
-        make.bottom.mas_equalTo(self.nameLabel.mas_bottom);
+        make.top.mas_equalTo(self.contentView.mas_top);
+        make.bottom.mas_equalTo(self.contentView.mas_top).offset(30);
     }];
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     //下一步  照片网络请求错误  看看到底咋回事
-    
-    
-    
-    
 }
 
 - (void)setMessage:(ZRBCommentsJSONModel *)message
 {
-    NSLog(@"message = %@",message);
+    //NSLog(@"message = %@",message);
     NSMutableAttributedString * finalContentStr = [[NSMutableAttributedString alloc] init];
     NSAttributedString * contentString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",[message valueForKey:@"content"]] attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:16], NSForegroundColorAttributeName: [UIColor darkGrayColor]}];
     [finalContentStr appendAttributedString:contentString];
@@ -137,7 +122,25 @@
     self.contentLabel.attributedText = finalNameStr;
     
     NSMutableAttributedString * finalTimeStr = [[NSMutableAttributedString alloc] init];
-    NSAttributedString * timeString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",[message valueForKey:@"time"]] attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13], NSForegroundColorAttributeName: [UIColor grayColor]}];
+    
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    NSTimeZone * timeZone = [NSTimeZone timeZoneWithName:@"Asia/Shanghai"];
+    [formatter setTimeZone:timeZone];
+    
+    NSString * realTimeStr = [NSString stringWithFormat:@"%@",[message valueForKey:@"time"]];
+    NSTimeInterval time = [realTimeStr doubleValue];
+    NSDate * detailDate = [NSDate dateWithTimeIntervalSince1970:time];
+    
+    //时间戳转时间
+    NSString * confromTimespStr = [formatter stringFromDate:detailDate];
+    NSLog(@"confromTimespStr = %@",confromTimespStr);
+    
+    
+//    NSAttributedString * timeString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@",[message valueForKey:@"time"]] attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13], NSForegroundColorAttributeName: [UIColor grayColor]}];
+    NSAttributedString * timeString = [[NSAttributedString alloc] initWithString:confromTimespStr attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:13], NSForegroundColorAttributeName: [UIColor grayColor]}];
     [finalTimeStr appendAttributedString:timeString];
     [finalNameStr appendAttributedString:nameString];
     [finalContentStr appendAttributedString:contentString];
@@ -154,9 +157,11 @@
     UIImage * avatarImage = [UIImage imageWithData:imageData];
     self.avatarImage.image = avatarImage;
     
-    self.approvalButton.titleLabel.text = [NSString stringWithFormat:@"%@",[message valueForKey:@"likes"]];
+    self.approvalButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    [self.approvalButton setTitle:[NSString stringWithFormat:@"%@",[message valueForKey:@"likes"]] forState:UIControlStateNormal];
+    [self.approvalButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     
-    NSLog(@"likes = %@",[message valueForKey:@"likes"]);
+   // NSLog(@"likes = %@",[message valueForKey:@"likes"]);
     NSLog(@"self.avatarImage.image = %@",self.avatarImage.image);
 
 }
